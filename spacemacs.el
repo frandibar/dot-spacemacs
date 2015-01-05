@@ -19,7 +19,7 @@
                                      )
  ;; A list of packages and/or extensions that will not be install and loaded.
  dotspacemacs-excluded-packages '()
-)
+ )
 
 ;; Settings
 ;; --------
@@ -68,13 +68,11 @@
 (defun dotspacemacs/init ()
   "User initialization for Spacemacs. This function is called at the very
  startup."
-
+  ;; Add marmalade package repository (necessary for ws-trim).
+                                        ; (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+  
   ;; Key-chord sequence to return to normal-mode when in insert-mode.
   (setq-default evil-escape-key-sequence (kbd "ji"))
-
-
-  ;; Use special `lisp-state' for lisp.
-  (add-hook 'emacs-lisp-mode-hook 'evil-lisp-state)
 
   ;; OS specific settings.
   (setq shell-file-name "/bin/bash")
@@ -136,6 +134,11 @@
   ;; Set mode for unknown Fish shell configuration files.
   (add-to-list 'auto-mode-alist '("\\.fish\\'" . conf-mode))
 
+  (use-package aggressive-indent
+    :config
+    (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode))
+  
+  ;; Specify agenda files.
   (setq org-agenda-files (quote ("~/Dropbox/docs/cumples.org"
                                  "~/Dropbox/docs/agenda-personal.org"
                                  "~/xapo/agenda.org")))
@@ -154,16 +157,23 @@
        "* %^t %^{")
       ))
 
-  (use-package aggressive-indent
-    :config
-    (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode))
-)
+  )
 
 (defun dotspacemacs/config ()
   "This is were you can ultimately override default Spacemacs configuration.
 This function is called at the very end of Spacemacs initialization."
 
-)
+  ;; Show git gutter marks on the left
+  (setq git-gutter-fr:side 'left-fringe)
+
+  ;; Use special `lisp-state' for lisp.
+  ;; FIXME: not working.
+  (add-hook 'emacs-lisp-mode-hook #'evil-lisp-state)
+
+  ;; Remap C-e to move cursor to end of line, instead of the default
+  ;; behavior of copying from below (evil-copy-from-below)
+  (define-key evil-insert-state-map "\C-e" 'move-end-of-line)
+  )
 
 ;; Custom variables
 ;; ----------------
@@ -186,6 +196,9 @@ This function is called at the very end of Spacemacs initialization."
  '(custom-safe-themes
    (quote
     ("64581032564feda2b5f2cf389018b4b9906d98293d84d84142d90d7986032d33" "9dae95cdbed1505d45322ef8b5aa90ccb6cb59e0ff26fef0b8f411dfc416c552" default)))
+ '(elpy-modules
+   (quote
+    (elpy-module-company elpy-module-eldoc elpy-module-flymake elpy-module-pyvenv elpy-module-yasnippet elpy-module-sane-defaults)))
  '(expand-region-contract-fast-key "V")
  '(expand-region-reset-fast-key "r")
  '(paradox-github-token t)
