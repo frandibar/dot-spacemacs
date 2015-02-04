@@ -8,13 +8,23 @@
 (setq-default
  ;; List of additional paths where to look for configuration layers.
  ;; Paths must have a trailing slash (ie. `~/.mycontribs/')
- dotspacemacs-configuration-layer-path '("~/spacemacs/contrib/" "~/dot-spacemacs/contrib/usr/")
+ dotspacemacs-configuration-layer-path '("~/spacemacs/contrib/"
+                                         "~/dot-spacemacs/contrib/usr/")
  ;; List of configuration layers to load.
- dotspacemacs-configuration-layers '(git
+ dotspacemacs-configuration-layers '(
+                                     ;; layers
+                                     git
                                      osx
                                      restclient
+                                     ;; web-mode ; TODO not found
+
+                                     ;; language layers
+                                     clojure
                                      python
                                      javascript
+                                     lua
+
+                                     ;; user layers
                                      frandibar
                                      )
  ;; A list of packages and/or extensions that will not be install and loaded.
@@ -25,6 +35,11 @@
 ;; --------
 
 (setq-default
+ ;; Specify the startup banner. If the value is an integer then the
+ ;; banner with the corresponding index is used, if the value is `random'
+ ;; then the banner is chosen randomly among the available banners, if
+ ;; the value is nil then no banner is displayed.
+ dotspacemacs-startup-banner 'random
  ;; Default theme applied at startup
  dotspacemacs-default-theme 'solarized-light
  ;; The leader key
@@ -45,6 +60,16 @@
  ;; If non nil the frame is maximized when Emacs starts up (Emacs 24.4+ only).
  ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
  dotspacemacs-maximized-at-startup 1
+ ;; A value from the range (0..100), in increasing opacity, which describes the
+ ;; transparency level of a frame when it's active or selected. Transparency can
+ ;; be toggled through `toggle-transparency'.
+ dotspacemacs-active-transparency 90
+ ;; A value from the range (0..100), in increasing opacity, which describes the
+ ;; transparency level of a frame when it's inactive or deselected. Transparency
+ ;; can be toggled through `toggle-transparency'.
+ dotspacemacs-inactive-transparency 90
+ ;; If non nil unicode symbols are displayed in the mode line (e.g. for lighters)
+ dotspacemacs-mode-line-unicode-symbols t
  ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth scrolling
  ;; overrides the default behavior of Emacs which recenters the point when
  ;; it reaches the top or bottom of the screen
@@ -69,10 +94,10 @@
   "User initialization for Spacemacs. This function is called at the very
  startup."
   ;; Add marmalade package repository (necessary for ws-trim).
-                                        ; (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
-  
-  ;; Key-chord sequence to return to normal-mode when in insert-mode.
-  (setq-default evil-escape-key-sequence (kbd "ji"))
+  ;; (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/"))
+
+  ;; Confirm when quitting Emacs.
+  (setq confirm-kill-emacs (quote yes-or-no-p))
 
   ;; OS specific settings.
   (setq shell-file-name "/bin/bash")
@@ -80,19 +105,12 @@
 
   (defvar calendar-date-style 'european)  ; dd/mm/yyyy
 
-  ;; Sentences end with single space, so this fixes sentence navigation
+  ;; Sentences end with single space, so this fixes sentence navigation.
   ;; commands.
   (setq sentence-end-double-space nil)
 
   ;; Set window title to buffer-file-name.
   (setq frame-title-format '("" "Emacs - %b - " buffer-file-name))
-
-  ;; Global keybindings;
-  (global-set-key [(super a)] 'mark-whole-buffer)
-  (global-set-key (kbd "C-c c") 'org-capture)
-  
-  ;; Useful for jumping to function definitions in buffer.
-  (global-set-key (kbd "s-i") 'helm-imenu)
 
   ;; Write backup files to own directory.
   ;; To disable backups, use `(setq backup-inhibited t)'.
@@ -137,7 +155,7 @@
   (use-package aggressive-indent
     :config
     (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode))
-  
+
   ;; Specify agenda files.
   (setq org-agenda-files (quote ("~/Dropbox/docs/cumples.org"
                                  "~/Dropbox/docs/agenda-personal.org"
@@ -163,12 +181,11 @@
   "This is were you can ultimately override default Spacemacs configuration.
 This function is called at the very end of Spacemacs initialization."
 
+  ;; Use special `lisp-state' for lisp.
+  (add-hook 'emacs-lisp-mode-hook 'evil-lisp-state)
+
   ;; Show git gutter marks on the left
   (setq git-gutter-fr:side 'left-fringe)
-
-  ;; Use special `lisp-state' for lisp.
-  ;; FIXME: not working.
-  (add-hook 'emacs-lisp-mode-hook #'evil-lisp-state)
 
   ;; Remap C-e to move cursor to end of line, instead of the default
   ;; behavior of copying from below (evil-copy-from-below)
@@ -201,6 +218,8 @@ This function is called at the very end of Spacemacs initialization."
     (elpy-module-company elpy-module-eldoc elpy-module-flymake elpy-module-pyvenv elpy-module-yasnippet elpy-module-sane-defaults)))
  '(expand-region-contract-fast-key "V")
  '(expand-region-reset-fast-key "r")
+ '(js2-strict-missing-semi-warning nil)
+ '(js2-strict-trailing-comma-warning nil)
  '(paradox-github-token t)
  '(ring-bell-function (quote ignore) t))
 (custom-set-faces

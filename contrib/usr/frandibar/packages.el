@@ -1,6 +1,11 @@
-(defvar frandibar-packages '(multiple-cursors
-                             jedi
-                             elpy
+(defvar frandibar-packages '(
+                             multiple-cursors
+                             ;; jedi
+                             ;; elpy
+
+
+                             restclient
+                             password-store
                              smartscan
                              ws-butler    
                              git-gutter-fringe)
