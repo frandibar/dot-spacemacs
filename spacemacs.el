@@ -10,7 +10,8 @@
  ;; Paths must have a trailing slash (ie. `~/.mycontribs/')
  dotspacemacs-configuration-layer-path '("~/spacemacs/contrib/"
                                          "~/dot-spacemacs/contrib/usr/")
- ;; List of configuration layers to load.
+ ;; List of configuration layers to load. If it is the symbol `all' instead
+ ;; of a list then all discovered layers will be installed.
  dotspacemacs-configuration-layers '(
                                      ;; layers
                                      git
@@ -29,7 +30,11 @@
                                      )
  ;; A list of packages and/or extensions that will not be install and loaded.
  dotspacemacs-excluded-packages '()
- )
+ ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
+ ;; are declared in a layer which is not a member of
+ ;; the list `dotspacemacs-configuration-layers'
+ dotspacemacs-delete-orphan-packages nil
+)
 
 ;; Settings
 ;; --------
@@ -40,8 +45,23 @@
  ;; then the banner is chosen randomly among the available banners, if
  ;; the value is nil then no banner is displayed.
  dotspacemacs-startup-banner 'random
- ;; Default theme applied at startup
- dotspacemacs-default-theme 'solarized-light
+ ;; List of themes, the first of the list is loaded when spacemacs starts.
+ ;; Press <SPC> T n to cycle to the next theme in the list (works great
+ ;; with 2 themes variants, one dark and one light)
+ dotspacemacs-themes '(
+                       monokai
+                       solarized-light
+                       solarized-dark
+                       leuven
+                       zenburn
+                       )
+ ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
+ ;; size to make separators look not too crappy.
+ ;; dotspacemacs-default-font '("Source Code Pro"
+ ;;                             :size 13
+ ;;                             :weight normal
+ ;;                             :width normal
+ ;;                             :powerline-scale 1.1)
  ;; The leader key
  dotspacemacs-leader-key "SPC"
  ;; Major mode leader key is a shortcut key which is the equivalent of
@@ -55,11 +75,20 @@
  ;; Guide-key delay in seconds. The Guide-key is the popup buffer listing
  ;; the commands bound to the current keystrokes.
  dotspacemacs-guide-key-delay 0.4
+ ;; If non nil a progress bar is displayed when spacemacs is loading. This
+ ;; may increase the boot time on some systems and emacs builds, set it to nil
+ ;; to boost the loading time.
+ dotspacemacs-loading-progress-bar t
+ ;; Enable micro-state for helm buffer when pressing on TAB."
+ dotspacemacs-helm-micro-state t
  ;; If non nil the frame is fullscreen when Emacs starts up (Emacs 24.4+ only).
  dotspacemacs-fullscreen-at-startup nil
+ ;; If non nil `spacemacs/toggle-fullscreen' will not use native fullscreen.
+ ;; Use to disable fullscreen animations in OSX."
+ dotspacemacs-fullscreen-use-non-native nil
  ;; If non nil the frame is maximized when Emacs starts up (Emacs 24.4+ only).
  ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
- dotspacemacs-maximized-at-startup 1
+ dotspacemacs-maximized-at-startup nil
  ;; A value from the range (0..100), in increasing opacity, which describes the
  ;; transparency level of a frame when it's active or selected. Transparency can
  ;; be toggled through `toggle-transparency'.
@@ -74,9 +103,6 @@
  ;; overrides the default behavior of Emacs which recenters the point when
  ;; it reaches the top or bottom of the screen
  dotspacemacs-smooth-scrolling t
- ;; If non nil pressing 'jk' in insert state, ido or helm will activate the
- ;; evil leader.
- dotspacemacs-feature-toggle-leader-on-jk nil
  ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
  dotspacemacs-smartparens-strict-mode nil
  ;; If non nil advises quit functions to keep server open when quitting.
@@ -85,7 +111,7 @@
  ;; specified with an installed package.
  ;; Not used for now.
  dotspacemacs-default-package-repository nil
-)
+ )
 
 ;; Initialization Hooks
 ;; --------------------
@@ -152,9 +178,9 @@
   ;; Set mode for unknown Fish shell configuration files.
   (add-to-list 'auto-mode-alist '("\\.fish\\'" . conf-mode))
 
-  (use-package aggressive-indent
-    :config
-    (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode))
+; (use-package aggressive-indent
+;   :config
+;   (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode))
 
   ;; Specify agenda files.
   (setq org-agenda-files (quote ("~/Dropbox/docs/cumples.org"
@@ -198,7 +224,6 @@ This function is called at the very end of Spacemacs initialization."
 ;; Do not write anything in this section. This is where Emacs will
 ;; auto-generate custom variable definitions.
 
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -222,9 +247,3 @@ This function is called at the very end of Spacemacs initialization."
  '(js2-strict-trailing-comma-warning nil)
  '(paradox-github-token t)
  '(ring-bell-function (quote ignore) t))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
