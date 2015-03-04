@@ -88,7 +88,7 @@
  dotspacemacs-fullscreen-use-non-native nil
  ;; If non nil the frame is maximized when Emacs starts up (Emacs 24.4+ only).
  ;; Takes effect only if `dotspacemacs-fullscreen-at-startup' is nil.
- dotspacemacs-maximized-at-startup nil
+ dotspacemacs-maximized-at-startup t
  ;; A value from the range (0..100), in increasing opacity, which describes the
  ;; transparency level of a frame when it's active or selected. Transparency can
  ;; be toggled through `toggle-transparency'.
@@ -216,6 +216,13 @@ This function is called at the very end of Spacemacs initialization."
   ;; Remap C-e to move cursor to end of line, instead of the default
   ;; behavior of copying from below (evil-copy-from-below)
   (define-key evil-insert-state-map "\C-e" 'move-end-of-line)
+
+  ;; Use paredit for certain modes
+  (dolist (mode '(clojure-mode-hook
+                  hy-mode-hook
+                  emacs-lisp-mode-hook
+                  lisp-interaction-mode-hook))
+    (add-hook mode 'paredit-mode))
   )
 
 ;; Custom variables
