@@ -14,9 +14,16 @@
  ;; of a list then all discovered layers will be installed.
  dotspacemacs-configuration-layers '(
                                      ;; layers
+                                     auto-completion
+                                     deft ;; capture notes
                                      git
+                                     markdown
+                                     org
                                      osx
                                      restclient
+                                     reveal-in-finder
+                                     syntax-checking
+                                     version-control
                                      ;; web-mode ; TODO not found
 
                                      ;; language layers
@@ -111,6 +118,12 @@
  ;; specified with an installed package.
  ;; Not used for now.
  dotspacemacs-default-package-repository nil
+ ;; Choose either vim or emacs style.
+ dotspacemacs-editing-style 'vim
+ ;; if non nil the loading prints logs in the `*Messages*` buffer. Default value is `nil`.
+ dotspacemacs-verbose-loading nil
+ ;; list of symbols to display recent items in the startup buffer, possible values are:  `recents`,`bookmarks` and `projects`
+ dotspacemacs-startup-lists '(recents projects)
  )
 
 ;; Initialization Hooks
@@ -217,12 +230,27 @@ This function is called at the very end of Spacemacs initialization."
   ;; behavior of copying from below (evil-copy-from-below)
   (define-key evil-insert-state-map "\C-e" 'move-end-of-line)
 
-  ;; Use paredit for certain modes
+  ;; Consider _ as part of a word.
+  (add-hook 'python-mode-hook (lambda () (modify-syntax-entry ?_ "w")))
+
+  ;; Use paxedit for certain modes and
   (dolist (mode '(clojure-mode-hook
                   hy-mode-hook
                   emacs-lisp-mode-hook
-                  lisp-interaction-mode-hook))
-    (add-hook mode 'paredit-mode))
+                  lisp-interaction-mode-hook
+                  cider-mode-hook))
+    (add-hook mode 'paredit-mode)
+    ;; consider - as part of a word.
+    (add-hook mode (lambda () (modify-syntax-entry ?- "w"))))
+
+  (global-set-key (kbd "M-SPC") 'cycle-spacing)
+
+
+  (setq deft-directory "~/Documents/deft")
+  (setq deft-extension "org")
+  (setq deft-text-mode 'org-mode)
+  (setq deft-use-filename-as-title t)
+  (setq deft-auto-save-interval 0)
   )
 
 ;; Custom variables
@@ -236,7 +264,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ac-ispell-requires 4)
+ '(ac-ispell-requires 4 t)
  '(ahs-case-fold-search nil)
  '(ahs-default-range (quote ahs-range-whole-buffer))
  '(ahs-idle-interval 0.25)
@@ -252,5 +280,14 @@ This function is called at the very end of Spacemacs initialization."
  '(expand-region-reset-fast-key "r")
  '(js2-strict-missing-semi-warning nil)
  '(js2-strict-trailing-comma-warning nil)
+ '(neo-show-hidden-files nil)
  '(paradox-github-token t)
  '(ring-bell-function (quote ignore) t))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((((class color) (min-colors 257)) (:foreground "#F8F8F2" :background "#272822")) (((class color) (min-colors 89)) (:foreground "#F5F5F5" :background "#1B1E1C"))))
+ '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))

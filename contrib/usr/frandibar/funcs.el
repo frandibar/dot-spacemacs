@@ -35,3 +35,14 @@
   "Find definition of definition under cursor."
   (interactive)
   (projectile-ag (concat "def " (word-at-point) "(")))
+
+(defun htmlize-with-line-numbers ()
+  "Extracted from http://pastebin.com/CefY8w27"
+  (interactive)
+  (goto-char (point-min))
+  (let ((n 1))
+    (while (not (eobp))
+      (htmlize-make-tmp-overlay (point) (point) `(before-string ,(format "%4d " n)))
+      (setq n (1+ n))
+      (forward-line 1)))
+  (switch-to-buffer (htmlize-buffer)))

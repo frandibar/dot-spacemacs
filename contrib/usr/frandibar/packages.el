@@ -1,10 +1,14 @@
 (defvar frandibar-packages '(
                              ;; elpy
                              ;; jedi
+                             yaml-mode
 
-                             ;; 4clojure
-                             ;; clojure-mode-extra-font-locking
+                             paxedit ;; minor mode for lisp
 
+                             ;; Interactive clojure problems
+                             4clojure
+
+                             htmlize
                              git-gutter-fringe
                              ;; multiple-cursors
                              password-store
@@ -36,6 +40,18 @@ which require an initialization must be listed explicitly in the list.")
 ;; (defun frandibar/init-jedi ()
 ;;   (use-package jedi))
 
+(defun frandibar/init-yaml-mode ()
+  (use-package yaml-mode))
+
+(defun frandibar/init-deft ()
+  (use-package deft
+    :config
+    (setq deft-directory "~/Documents/deft")
+    (setq deft-extension "org")
+    (setq deft-text-mode 'org-mode)
+    (setq deft-use-filename-as-title t)
+    (setq deft-auto-save-interval 0)))
+
 (defun frandibar/init-git-gutter-fringe ()
   (use-package git-gutter-fringe))
 
@@ -61,3 +77,20 @@ which require an initialization must be listed explicitly in the list.")
     :config
     (progn
       (ws-butler-global-mode 1))))
+
+(defun frandibar/init-paxedit ()
+  (use-package paxedit
+    :bind (("M-<right>" . paxedit-transpose-forward)
+           ("M-<left>" . paxedit-transpose-backward)
+           ("M-<up>" . paxedit-backward-up)
+           ("M-<down>" . paxedit-backward-end)
+           ("M-b" . paxedit-previous-symbol)
+           ("M-f" . paxedit-next-symbol)
+           ("C-%" . paxedit-copy)
+           ("C-&" . paxedit-kill)
+           ("C-*" . paxedit-delete)
+           ("C-^" . paxedit-sexp-raise)
+           ("M-u" . paxedit-symbol-change-case)
+           ("C-@" . paxedit-symbol-copy)
+           ("C-#" . paxedit-symbol-kill))
+    ))
