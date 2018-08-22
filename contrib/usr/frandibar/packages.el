@@ -2,11 +2,15 @@
                              ;; elpy
                              ;; jedi
                              yaml-mode
+                             dockerfile-mode
 
                              paxedit ;; minor mode for lisp
 
                              ;; Interactive clojure problems
-                             4clojure
+                             ;; 4clojure
+
+                             blacken ;; python code formatter
+                             py-isort
 
                              htmlize
                              git-gutter-fringe
@@ -42,6 +46,9 @@ which require an initialization must be listed explicitly in the list.")
 
 (defun frandibar/init-yaml-mode ()
   (use-package yaml-mode))
+
+(defun frandibar/init-dockerfile-mode ()
+  (use-package dockerfile-mode))
 
 (defun frandibar/init-deft ()
   (use-package deft
@@ -93,4 +100,20 @@ which require an initialization must be listed explicitly in the list.")
            ("M-u" . paxedit-symbol-change-case)
            ("C-@" . paxedit-symbol-copy)
            ("C-#" . paxedit-symbol-kill))
+    ))
+
+(defun frandibar/init-py-isort ()
+  (use-package py-isort
+    :config
+    ;; commented out since I need to guarantee order (see my-python-hooks in init.el instead)
+    ;; this hook should execute before the blacken hook as it formats differently
+    ;; (add-hook 'before-save-hook 'py-isort-before-save t)
+    ))
+
+(defun frandibar/init-blacken ()
+  (use-package blacken
+    :config
+    ;; commented out since I need to guarantee order (see my-python-hooks in init.el instead)
+    ;; python reformatting upon save with black
+    ;; (add-hook 'python-mode-hook 'blacken-mode)
     ))

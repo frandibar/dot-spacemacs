@@ -18,6 +18,11 @@ values."
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
    '(
+     sql
+     csv
+     shell-scripts
+     ansible
+     html
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
@@ -31,20 +36,22 @@ values."
      org
      osx
      restclient
-     reveal-in-finder
+     ;; reveal-in-osx-finder
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
      ;; spell-checking
      syntax-checking
      version-control
+     ;; csv-mode
 
      ;; language layers
      clojure
      javascript
      lua
-     php
+     ;;php
      python
+     elm
 
      ;; user layers
      frandibar
@@ -55,7 +62,10 @@ values."
    ;; configuration in `dotspacemacs/config'.
    dotspacemacs-additional-packages '()
    ;; A list of packages and/or extensions that will not be install and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '(
+                                    exec-path-from-shell  ;; avoid startup error: Error (use-package): exec-path-from-shell :init: Expected printf output from shell, but got: ""
+                                    smartparens
+                                    )
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
    ;; the list `dotspacemacs-configuration-layers'. (default t)
@@ -201,6 +211,12 @@ values."
    dotspacemacs-default-package-repository nil
    ))
 
+(defun my-python-hooks ()
+  ;; DO NOT CHANGE THE ORDER OF THESE TWO HOOKS
+  ;; each hook is added at the beginning. First we must run py-isort and then blacken
+  (add-hook 'before-save-hook 'blacken-buffer)
+  (add-hook 'before-save-hook 'py-isort-before-save))
+
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init'.  You are free to put any
@@ -259,6 +275,13 @@ user code."
   ;; Show line numbers for all programming modes.
   (add-hook 'prog-mode-hook (lambda () (linum-mode 1)))
 
+  (add-hook 'python-mode-hook 'my-python-hooks)
+
+  ;; If working in a directory with its own TAGS file, and then I move to
+  ;; another directory, with its own TAGS file, avoid getting asked this
+  ;; question: "Keep current list of tags tables also? (y or n)"
+  (setq tags-add-tables nil)
+
   ;; Set mode for unknown Fish shell configuration files.
   (add-to-list 'auto-mode-alist '("\\.fish\\'" . conf-mode))
 
@@ -269,10 +292,12 @@ user code."
 ;   :config
 ;   (add-hook 'emacs-lisp-mode-hook #'aggressive-indent-mode))
 
+  (setq org-ellipsis "⤵")
+
   ;; Specify agenda files.
   (setq org-agenda-files (quote ("~/Dropbox/docs/cumples.org"
                                  "~/Dropbox/docs/agenda-personal.org"
-                                 "~/xapo/agenda.org")))
+                                 "/keybase/private/frandibar/xapo/agenda.org")))
 
   (defvar org-capture-templates
     '(("m" "movilidad")
@@ -284,17 +309,42 @@ user code."
        "* %^t %^{prompt}")
       ("h" "salud" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "salud")
        "* %^t %^{prompt}")
-      ("x" "xapo" entry (file+headline "~/xapo/agenda.org" "xapo")
+      ("x" "xapo" entry (file+headline "/keybase/private/frandibar/xapo/agenda.org" "xapo")
        "* %^t %^{")
-      ))
-
-  )
+      )))
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
  This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
+  (setq web-mode-markup-indent-offset 2)
+  ;; (spacemacs/toggle-smartparens-globally-off)
 )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("fa2b58bb98b62c3b8cf3b6f02f058ef7827a8e497125de0254f56e373abee088" "bffa9739ce0752a37d9b1eee78fc00ba159748f50dc328af4be661484848e476" default)))
+ '(elm-format-on-save t)
+ '(evil-want-Y-yank-to-eol nil)
+ '(helm-ag-use-agignore t)
+ '(package-selected-packages
+   (quote
+    (blacken shell-pop sql-indent org-trello yapfify yaml-mode ws-butler window-numbering which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toc-org tagedit spacemacs-theme spaceline smeargle smartscan slim-mode scss-mode sass-mode reveal-in-osx-finder restclient restart-emacs rainbow-delimiters quelpa pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements persp-mode pcre2el pbcopy paxedit paradox osx-trash osx-dictionary orgit org-projectile org-present org-pomodoro org-plus-contrib org-download org-bullets open-junk-file ob-http neotree move-text monokai-theme mmm-mode markdown-toc magit-gitflow macrostep lua-mode lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl json-mode js2-refactor js-doc jinja2-mode info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md flycheck-pos-tip flycheck-elm flx-ido fish-mode fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu emmet-mode elm-mode elisp-slime-nav dumb-jump dockerfile-mode diff-hl cython-mode csv-mode company-web company-tern company-statistics company-shell company-anaconda column-enforce-mode coffee-mode clojure-snippets clj-refactor clean-aindent-mode cider-eval-sexp-fu auto-yasnippet auto-highlight-symbol auto-compile ansible-doc ansible aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
+ '(paradox-github-token t)
+ '(spacemacs-large-file-modes-list
+   (quote
+    (archive-mode tar-mode jka-compr git-commit-mode image-mode doc-view-mode doc-view-mode-maybe ebrowse-tree-mode pdf-view-mode tags-table-mode))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
