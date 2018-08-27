@@ -49,6 +49,6 @@
 
 (defun frandibar/py-format-with-isort-and-black-before-save ()
   (when (eq major-mode 'python-mode)
-    (add-hook 'before-save-hook 'blacken-buffer)
-    (add-hook 'before-save-hook 'py-isort-before-save)
+    (py-isort-buffer)
+    (blacken-buffer)
     ))
