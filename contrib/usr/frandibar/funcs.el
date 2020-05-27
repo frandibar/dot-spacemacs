@@ -52,3 +52,15 @@
     (py-isort-buffer)
     (blacken-buffer)
     ))
+
+(defun frandibar-ticket-mer(ticket-num)
+  (interactive "sTicket number:")
+  (browse-url (concat "https://jira.xapo.com/browse/MER-" ticket-num)))
+
+(defun frandibar-ticket-cs(ticket-num)
+  (interactive "sTicket number:")
+  (browse-url (concat "https://jira.xapo.com/browse/CS-" ticket-num)))
+
+(defun frandibar-ticket-devops(ticket-num)
+  (interactive "sTicket number:")
+  (browse-url (concat "https://jira.xapo.com/servicedesk/customer/portal/7/ISD-" ticket-num)))

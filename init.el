@@ -31,6 +31,7 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(
+     clojure
      sql
      csv
      shell-scripts
@@ -49,7 +50,8 @@ values."
      markdown
      org
      osx
-     ;; restclient
+     restclient
+     restclient-helm
      ;; reveal-in-osx-finder
      ;; (shell :variables
      ;;        shell-default-height 30
@@ -148,13 +150,13 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(monokai
-                         spacemacs-dark
-                         spacemacs-light
-                         solarized-light
-                         solarized-dark
-                         leuven
-                         zenburn)
+   dotspacemacs-themes '(monokai)
+                         ;; spacemacs-dark
+                         ;; spacemacs-light
+                         ;; solarized-light
+                         ;; solarized-dark
+                         ;; leuven
+                         ;; zenburn)
    ;; If non nil the cursor color matches the state color.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
@@ -381,7 +383,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
   ;; Show line numbers for all programming modes.
   (add-hook 'prog-mode-hook (lambda () (linum-mode 1)))
 
-  (add-hook 'python-mode-hook 'my-python-hooks)
+  ;; (add-hook 'python-mode-hook 'my-python-hooks)
 
   ;; If working in a directory with its own TAGS file, and then I move to
   ;; another directory, with its own TAGS file, avoid getting asked this
@@ -392,7 +394,7 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (add-to-list 'auto-mode-alist '("\\.fish\\'" . conf-mode))
 
   ;; Allow evaluating code in org
-  (setq org-babel-load-languages '((sh . t) (python . t) (emacs-lisp . t)))
+  (setq org-babel-load-languages '((shell . t) (python . t) (emacs-lisp . t)))
 
 ; (use-package aggressive-indent
 ;   :config
@@ -413,10 +415,12 @@ before packages are loaded. If you are unsure, you should try in setting them in
        "* %^t %^{prompt}")
       ("p" "personal" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "personal")
        "* %^t %^{prompt}")
-      ("h" "salud" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "salud")
+      ("h" "hijas" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "hijas")
+       "* %^t %^{prompt}")
+      ("s" "salud" entry (file+headline "~/Dropbox/docs/agenda-personal.org" "salud")
        "* %^t %^{prompt}")
       ("x" "xapo" entry (file+headline "/keybase/private/frandibar/xapo/agenda.org" "xapo")
-       "* %^t %^{")
+       "* %^t %^{prompt}")
       )))
 
 (defun dotspacemacs/user-config ()
@@ -447,7 +451,7 @@ you should place your code here."
  '(helm-ag-use-agignore t)
  '(package-selected-packages
    (quote
-    (winum powerline restclient-helm org-category-capture alert log4e gntp org-mime ob-restclient markdown-mode skewer-mode simple-httpd json-snatcher json-reformat js2-mode insert-shebang parent-mode projectile request haml-mode gitignore-mode fringe-helper git-gutter+ git-gutter fuzzy pos-tip flycheck flx magit magit-popup git-commit ghub let-alist with-editor smartparens iedit anzu evil goto-chg undo-tree diminish web-completion-data dash-functional tern company-restclient know-your-http-well company-ansible company hydra inflections edn multiple-cursors paredit peg eval-sexp-fu highlight cider sesman seq spinner queue pkg-info clojure-mode epl bind-map bind-key yasnippet packed anaconda-mode pythonic f dash s helm avy helm-core async auto-complete popup blacken shell-pop sql-indent org-trello yapfify yaml-mode ws-butler window-numbering which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toc-org tagedit spacemacs-theme spaceline smeargle smartscan slim-mode scss-mode sass-mode reveal-in-osx-finder restclient restart-emacs rainbow-delimiters quelpa pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements persp-mode pcre2el pbcopy paxedit paradox osx-trash osx-dictionary orgit org-projectile org-present org-pomodoro org-plus-contrib org-download org-bullets open-junk-file ob-http neotree move-text monokai-theme mmm-mode markdown-toc magit-gitflow macrostep lua-mode lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl json-mode js2-refactor js-doc jinja2-mode info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md flycheck-pos-tip flycheck-elm flx-ido fish-mode fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu emmet-mode elm-mode elisp-slime-nav dumb-jump dockerfile-mode diff-hl cython-mode csv-mode company-web company-tern company-statistics company-shell company-anaconda column-enforce-mode coffee-mode clojure-snippets clj-refactor clean-aindent-mode cider-eval-sexp-fu auto-yasnippet auto-highlight-symbol auto-compile ansible-doc ansible aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
+    (lv 4clojure poet-theme winum powerline restclient-helm org-category-capture alert log4e gntp org-mime ob-restclient markdown-mode skewer-mode simple-httpd json-snatcher json-reformat js2-mode insert-shebang parent-mode projectile request haml-mode gitignore-mode fringe-helper git-gutter+ git-gutter fuzzy pos-tip flycheck flx magit magit-popup git-commit ghub let-alist with-editor smartparens iedit anzu evil goto-chg undo-tree diminish web-completion-data dash-functional tern company-restclient know-your-http-well company-ansible company hydra inflections edn multiple-cursors paredit peg eval-sexp-fu highlight cider sesman seq spinner queue pkg-info clojure-mode epl bind-map bind-key yasnippet packed anaconda-mode pythonic f dash s helm avy helm-core async auto-complete popup blacken shell-pop sql-indent org-trello yapfify yaml-mode ws-butler window-numbering which-key web-mode web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toc-org tagedit spacemacs-theme spaceline smeargle smartscan slim-mode scss-mode sass-mode reveal-in-osx-finder restclient restart-emacs rainbow-delimiters quelpa pyvenv pytest pyenv-mode py-isort pug-mode popwin pip-requirements persp-mode pcre2el pbcopy paxedit paradox osx-trash osx-dictionary orgit org-projectile org-present org-pomodoro org-plus-contrib org-download org-bullets open-junk-file ob-http neotree move-text monokai-theme mmm-mode markdown-toc magit-gitflow macrostep lua-mode lorem-ipsum livid-mode live-py-mode linum-relative link-hint less-css-mode launchctl json-mode js2-refactor js-doc jinja2-mode info+ indent-guide ido-vertical-mode hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation help-fns+ helm-themes helm-swoop helm-pydoc helm-projectile helm-mode-manager helm-make helm-gitignore helm-flx helm-descbinds helm-css-scss helm-company helm-c-yasnippet helm-ag google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe git-gutter-fringe+ gh-md flycheck-pos-tip flycheck-elm flx-ido fish-mode fill-column-indicator fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu emmet-mode elm-mode elisp-slime-nav dumb-jump dockerfile-mode diff-hl cython-mode csv-mode company-web company-tern company-statistics company-shell company-anaconda column-enforce-mode coffee-mode clojure-snippets clj-refactor clean-aindent-mode cider-eval-sexp-fu auto-yasnippet auto-highlight-symbol auto-compile ansible-doc ansible aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line ac-ispell)))
  '(paradox-github-token t)
  '(spacemacs-large-file-modes-list
    (quote
